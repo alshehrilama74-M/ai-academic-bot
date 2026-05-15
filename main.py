@@ -24,14 +24,15 @@ from telegram.ext import (
     ContextTypes,
     filters,
 )
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 # ─────────────────────────────────────────────
 #  CONFIGURATION  –  Replace with your own keys
 # ─────────────────────────────────────────────
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = "models/gemini-1.5-flash-latest"
+GEMINI_MODEL = "gemini-3.1-flash-lite-preview"
 
 # ─────────────────────────────────────────────
 #  LOGGING
@@ -46,15 +47,7 @@ logger = logging.getLogger(__name__)
 #  GEMINI CLIENT
 #  max_output_tokens raised to 3000 to prevent cut-off responses
 # ─────────────────────────────────────────────
-genai.configure(api_key=GEMINI_API_KEY)
-
-gemini_model = genai.GenerativeModel(
-    model_name=GEMINI_MODEL,
-    generation_config=genai.types.GenerationConfig(
-        max_output_tokens=5000,   # was 1000 — increased to avoid truncation
-        temperature=0.7,
-    ),
-)
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 # ─────────────────────────────────────────────
 #  CONVERSATION STATES
@@ -142,11 +135,19 @@ def tr(context: ContextTypes.DEFAULT_TYPE, en: str, ar: str) -> str:
 def ask_gemini(system_prompt: str, user_message: str) -> str:
     """
     Send a combined system + user prompt to Gemini and return the reply.
-    Uses the original google.generativeai GenerativeModel.
     """
     try:
         full_prompt = f"{system_prompt}\n\n{user_message}"
-        response = gemini_model.generate_content(full_prompt)
+
+        response = client.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=full_prompt,
+            config=types.GenerateContentConfig(
+                max_output_tokens=5000,
+                temperature=0.7,
+            ),
+        )
+
         return response.text.strip()
 
     except Exception as e:
