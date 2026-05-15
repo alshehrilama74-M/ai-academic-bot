@@ -105,11 +105,20 @@ MAIN_MENU_KEYBOARD = ReplyKeyboardMarkup(
 
 # Maps the button label the user taps to an internal action key
 FEATURE_LABEL_TO_ACTION = {
-    "Explain":    "explain",
+    "Explain": "explain",
+    "شرح": "explain",
+
     "Study Plan": "plan",
-    "Summary":    "summary",
-    "Quiz":       "quiz",
-    "Resources":  "resources",
+    "خطة دراسة": "plan",
+
+    "Summary": "summary",
+    "ملخص": "summary",
+
+    "Quiz": "quiz",
+    "اختبار": "quiz",
+
+    "Resources": "resources",
+    "مصادر": "resources",
 }
 
 # ─────────────────────────────────────────────
@@ -532,8 +541,8 @@ def main() -> None:
         entry_points=[
             MessageHandler(
                 filters.TEXT & filters.Regex(
-                    r"^(Explain|Study Plan|Summary|Quiz|Resources)$"
-                ),
+    r"^(Explain|شرح|Study Plan|خطة دراسة|Summary|ملخص|Quiz|اختبار|Resources|مصادر)$"
+),
                 feature_button_pressed,
             )
         ],
