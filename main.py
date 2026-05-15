@@ -148,14 +148,14 @@ def ask_gemini(system_prompt: str, user_message: str) -> str:
         full_prompt = f"{system_prompt}\n\n{user_message}"
         response = gemini_model.generate_content(full_prompt)
         return response.text.strip()
-except Exception as e:
-    logger.exception("Gemini error details")
-    return (
-        "Sorry, I could not reach the AI service right now. "
-        "Please try again in a moment.\n\n"
-        "عذرًا، لم أتمكن من الاتصال بالخدمة. يرجى المحاولة مرة أخرى."
-    )
 
+    except Exception as e:
+        logger.exception("Gemini error details")
+        return (
+            "Sorry, I could not reach the AI service right now. "
+            "Please try again in a moment.\n\n"
+            "عذرًا، لم أتمكن من الاتصال بالخدمة. يرجى المحاولة مرة أخرى."
+        )
 
 def build_system_prompt(context: ContextTypes.DEFAULT_TYPE, task: str) -> str:
     """
