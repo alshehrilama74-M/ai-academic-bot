@@ -51,7 +51,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel(
     model_name=GEMINI_MODEL,
     generation_config=genai.types.GenerationConfig(
-        max_output_tokens=200,   # was 1000 — increased to avoid truncation
+        max_output_tokens=10000,   # was 1000 — increased to avoid truncation
         temperature=0.7,
     ),
 )
